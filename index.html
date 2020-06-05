@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>note in chrome</title>
+    <meta name="viewport" content="width=device-width,user-scalable=0">
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+</head>
+<style>
+    body {
+        padding: 5%;
+        font-size: 1em;
+        width: 800px;
+    }
+    .wrap {
+        width: 800px;
+        height: 100%;
+        margin: 0 auto;
+        border: 2px solid #ccc;
+        display: flex;
+    }
+    .wrap>div {
+        outline: none;
+        flex: 1;
+        border: 1px solid #ccc;
+        height: 1000px;
+    }
+
+    .wrap>div>div {
+        text-align: center;
+        margin: 5px;
+        font-size: 10px;
+        outline: none;
+    }
+</style>
+<body onload="document.body.focus();">
+    <div id="app">
+        <div class="wrap">
+            <div class="left" id="left">
+                <button class="login" v-on:click="updateData">button</button>
+                <div v-for="item in list1" v-text='item' contenteditable="true">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./index.js"></script>
+</body>
+</html>
