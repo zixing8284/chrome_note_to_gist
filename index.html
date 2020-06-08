@@ -8,37 +8,46 @@
 </head>
 <style>
     body {
+        text-align: left;
+        max-width: 800px;
+        margin: 0 auto;
         padding: 5%;
-        font-size: 1em;
-        width: 800px;
+        background: #fdfdfb;
+        color: #242625;
     }
     .wrap {
-        width: 800px;
-        height: 100%;
         margin: 0 auto;
-        border: 2px solid #ccc;
-        display: flex;
     }
-    .wrap>div {
+    #dodo {
         outline: none;
-        flex: 1;
-        border: 1px solid #ccc;
-        height: 1000px;
+        outline-color: black;
+        /* -webkit-user-modify: read-write-plaintext-only; */
     }
-
     .wrap>div>div {
-        text-align: center;
-        margin: 5px;
+        padding: 5px;
         font-size: 10px;
-        outline: none;
+    }
+    .wrap>div>div::before {
+        content: "> ";
+    }
+    .todo {
+        color:crimson;
+        font-size: 12px;
+    }
+    .miku {
+        width: 500px;
     }
 </style>
-<body onload="document.body.focus();">
+<body>
     <div id="app">
+        <button class="gist" v-on:click="createData">create and upload</button>
+        <button class="gist" v-on:click="updateData">update</button>
         <div class="wrap">
-            <div class="left" id="left">
-                <button class="login" v-on:click="updateData">button</button>
-                <div v-for="item in list1" v-text='item' contenteditable="true">
+            <p class="todo">= Todo =</p>
+            <div id="dodo" contenteditable="true">
+                <div class="miku" contenteditable="true" v-for="(item,index) in list1" v-text = "item" @input="handleInput" v-on:keyup.enter.prevent="addNewList">
+                </div>
+                <!-- <div class="miku" contenteditable="true" @input="handleInput" v-on:keyup.enter.prevent="addNewList"> -->
                 </div>
             </div>
         </div>
