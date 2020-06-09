@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>note in chrome</title>
@@ -14,44 +15,100 @@
         padding: 5%;
         background: #fdfdfb;
         color: #242625;
+        font-size: 12px;
     }
+
     .wrap {
         margin: 0 auto;
     }
+
     #dodo {
         outline: none;
-        outline-color: black;
+        outline-color: 242625;
         /* -webkit-user-modify: read-write-plaintext-only; */
     }
+
     .wrap>div>div {
         padding: 5px;
         font-size: 10px;
     }
+
     .wrap>div>div::before {
         content: "> ";
     }
+
     .todo {
-        color:crimson;
+        color: crimson;
+        /* background: #242625; */
         font-size: 12px;
     }
+
     .miku {
-        width: 500px;
+        max-width: 500px;
+    }
+
+    .row {
+        max-width: 500px;
+        overflow: scorll-y;
+        padding: 0 0 20px 0;
+    }
+
+    .key {
+        color: darkcyan;
+        /* background: greenyellow; */
+    }
+
+    .input {
+        outline: none;
+        padding: 0 10px;
+        border: none;
+        background: #fdfdfb;
+        color: crimson;
+        font-size: 10px;
+    }
+    button {
+        border: none;
+        background: #242625;
+        color: floralwhite;
+        cursor: pointer;
     }
 </style>
+
 <body>
     <div id="app">
+        <div class="row">
+            <label for="gistToken" class="key">Access Token:</label>
+
+                <input type="password" class="input" id="gistToken" v-model="token"
+                    placeholder="Personal Access Tokens" />
+
+            <br>
+            <label for="gistId" class="key">Gist Id:</label>
+
+                <input type="password" class="input" id="gistId" v-model="gist_id" placeholder="Gist Id" />
+
+
+        </div>
+
+        <br>
         <button class="gist" v-on:click="createData">create and upload</button>
         <button class="gist" v-on:click="updateData">update</button>
+        <button class="gist" v-on:click="getData">get</button>
+
         <div class="wrap">
-            <p class="todo">= Todo =</p>
+            <p class="todo">= ＭｅＭｏ =</p>
             <div id="dodo" contenteditable="true">
-                <div class="miku" contenteditable="true" v-for="(item,index) in list1" v-text = "item" @input="handleInput" v-on:keyup.enter.prevent="addNewList">
+                <div class="miku" contenteditable="true" v-for="(item,index) in list1" v-text="item"
+                    @input="handleInput" v-on:keyup.enter.prevent="addNewList">
                 </div>
                 <!-- <div class="miku" contenteditable="true" @input="handleInput" v-on:keyup.enter.prevent="addNewList"> -->
-                </div>
             </div>
+            <textarea name="" id="" cols="30" rows="10" v-model="pulled"
+                v-if="this.pulled != null"> {{pulled}} </textarea>
         </div>
+    </div>
     </div>
     <script src="./index.js"></script>
 </body>
+
 </html>
