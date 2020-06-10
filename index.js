@@ -1,4 +1,12 @@
-// todo:管理应用的生命周期
+var unsaved = false;
+window.addEventListener("beforeunload", () =>{
+    if(saved){
+
+    }
+    app.blur();
+});
+
+
 class Github {
     // 整个index.html string
     // notesource = document.documentElement.outerHTML;
@@ -69,7 +77,7 @@ class Github {
                 // console.log(Vue.prototype.$puluing);
                 // console.log(app.$puluing);
                 document.getElementById("dodo").innerHTML = app.$puluing;
-
+                this.notesource = app.$puluing;
             }
             return result;
         }
@@ -84,32 +92,49 @@ const app = new Vue({
     el: "#app",
     data() {
         return {
+            // test, remove later
             list1: [1, 2, 3, 4, 5, 6],
-
             pulled: null,
             gist_id: "",
             token: "",
             ButtonDisabled: false,
-            is_loading: false
+            is_loading: false,
+            blabla: ""
         }
     },
+    watch: {
+        blabla:{
+            handler(newName, oldName){
+                console.log(oldName);
+                // this.rememberDodo();
+            }
+        }
+    },
+    // i am learning how it works
     beforeCreate() {
         Vue.prototype.$puluing = "";
     },
     created() {
         // 检查remember me
         console.log("abc");
-        chrome.storage.local.get("validation",(response) => {
-            if(response.validation) {
+        chrome.storage.local.get("validation", (response) => {
+            if (response.validation) {
                 this.gist_id = response.validation[1];
                 this.token = response.validation[0];
                 console.log(this.gist_id);
+                this.ButtonDisabled = true;
             }
             else {
                 // pass
             };
         });
+        // chrome.storage是异步的，所以下面这行打印仍然为空
         console.log(this.gist_id);
+        chrome.storage.local.get("DodoData", (response) => {
+            if (response.DodoData) {
+                document.getElementById("dodo").innerHTML = response.DodoData;
+            }
+        })
     },
     mounted() {
         console.log("def");
@@ -124,40 +149,61 @@ const app = new Vue({
             github.fetch_update();
         },
         getData() {
-            if(!this.pulled){
+            if (!this.pulled) {
                 let github = new Github();
                 github.fetch_get(true);
                 this.pulled = true;
             };
-
         },
         rememberMe() {
             // 缓存gistid, token
             chrome.storage.local.get("validation", (response) => {
-                if(!response.validation) {
+                if (!response.validation) {
                     response.validation = [];
-                    response.validation.push(this.token,this.gist_id);
-                    chrome.storage.local.set(response);
-                    this.ButtonDisabled = true;
+                    if(this.token || this.gist_id){
+                        response.validation.push(this.token, this.gist_id);
+                        chrome.storage.local.set(response);
+                        this.ButtonDisabled = true;
+                    }else{
+                        console.log("不能为空");
+                        // pass
+                    };
                 }
                 else {
                     // pass
                 };
             })
         },
-        clearStorage(){
-            chrome.storage.local.clear();
+        rememberDodo() {
+            // notesource
+            chrome.storage.local.get("DodoData", (response) => {
+                if (response.DodoData) {
+                    chrome.storage.local.remove("DodoData", () => {
+                        console.log('removed');
+                    });
+                };
+                response.DodoData = document.getElementById("dodo").innerHTML;
+                chrome.storage.local.set(response);
+                console.log(response.DodoData);
+                this.blabla = response.DodoData;
+            })
+        },
+        blur() {
+            // console.log("blur");
+            this.rememberDodo();
+        },
+        clearValidation() {
+            chrome.storage.local.remove("validation");
             this.ButtonDisabled = false;
-            this.gist_id="";
-            this.token="";
+            this.gist_id = "";
+            this.token = "";
         },
         handleInput($event) {
-            this.list1[index] = $event.target.innerText;
-            console.log(this.list1);
+            // this function has error and can not launch
+            //     this.list1[index] = $event.target.innerText;
         },
         addNewList($event) {
-            this.list1.push($event.target.value)
-            console.log(this.list1)
+            // this.list1.push($event.target.value)
         }
     }
 })
