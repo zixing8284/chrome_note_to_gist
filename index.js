@@ -1,13 +1,21 @@
+// todo:管理应用的生命周期
 class Github {
     // 整个index.html string
-    notesource = document.documentElement.outerHTML;
+    // notesource = document.documentElement.outerHTML;
+    // #dodo string
+    notesource = document.getElementById("dodo").innerHTML;
+
     // access_token
-    token = "4942bcac29be72a6700c9c0bdda3b18a23e3d915";
+    token = "";
     // gist_id
-    gist_id = "63bd25acc35e771c1ede16ae1b5b53e3";
+    gist_id = "";
 
     raw = {};
     requestOptions = {};
+    constructor() {
+        this.gist_id = app.gist_id;
+        this.token = app.token;
+    }
     // pulled = null;
     // 需要发送的gist内容格式
     set_raw(description, content) {
@@ -56,9 +64,12 @@ class Github {
             const response = await fetch(`https://api.github.com/gists/${this.gist_id}`, { method: 'GET' });
             const result = await response.json();
             if (flag == true) {
-                app.pulled = result.files["index.html"].content;
-                console.log(app.pulled)
-                // this.pulled = result;
+                // app.pulled = result.files["index.html"].content;
+                Vue.prototype.$puluing = result.files["index.html"].content;
+                // console.log(Vue.prototype.$puluing);
+                // console.log(app.$puluing);
+                document.getElementById("dodo").innerHTML = app.$puluing;
+
             }
             return result;
         }
@@ -71,17 +82,37 @@ class Github {
 
 const app = new Vue({
     el: "#app",
-    // data: {
-    //     list1: [1, 2, 3, 4, 5, 6],
-    //     pulled: null
-    // },
     data() {
         return {
             list1: [1, 2, 3, 4, 5, 6],
+
             pulled: null,
-            gist_id: null,
-            token: null
+            gist_id: "",
+            token: "",
+            ButtonDisabled: false,
+            is_loading: false
         }
+    },
+    beforeCreate() {
+        Vue.prototype.$puluing = "";
+    },
+    created() {
+        // 检查remember me
+        console.log("abc");
+        chrome.storage.local.get("validation",(response) => {
+            if(response.validation) {
+                this.gist_id = response.validation[1];
+                this.token = response.validation[0];
+                console.log(this.gist_id);
+            }
+            else {
+                // pass
+            };
+        });
+        console.log(this.gist_id);
+    },
+    mounted() {
+        console.log("def");
     },
     methods: {
         createData() {
@@ -93,13 +124,32 @@ const app = new Vue({
             github.fetch_update();
         },
         getData() {
-            let github = new Github();
-            github.fetch_get(true);
-            // this.pulled = github.pulled;
-            if (this.pulled) {
-                console.log('access')
+            if(!this.pulled){
+                let github = new Github();
+                github.fetch_get(true);
+                this.pulled = true;
             };
 
+        },
+        rememberMe() {
+            // 缓存gistid, token
+            chrome.storage.local.get("validation", (response) => {
+                if(!response.validation) {
+                    response.validation = [];
+                    response.validation.push(this.token,this.gist_id);
+                    chrome.storage.local.set(response);
+                    this.ButtonDisabled = true;
+                }
+                else {
+                    // pass
+                };
+            })
+        },
+        clearStorage(){
+            chrome.storage.local.clear();
+            this.ButtonDisabled = false;
+            this.gist_id="";
+            this.token="";
         },
         handleInput($event) {
             this.list1[index] = $event.target.innerText;

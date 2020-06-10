@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <title>note in chrome</title>
     <meta name="viewport" content="width=device-width,user-scalable=0">
-    <script src="https://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+    <!-- <script src="./vue@2.6.11.js"></script> -->
+
+
 </head>
 <style>
     body {
@@ -66,28 +68,34 @@
         color: crimson;
         font-size: 10px;
     }
+
     button {
         border: none;
         background: #242625;
         color: floralwhite;
         cursor: pointer;
     }
+
+    button:disabled {
+        cursor: default;
+        color: #242625;
+        background: #fdfdfb;
+        text-decoration: line-through;
+    }
 </style>
 
 <body>
     <div id="app">
+        <p># `get` button only works for gist already updated. work only once when you start.</p>
         <div class="row">
-            <label for="gistToken" class="key">Access Token:</label>
-
-                <input type="password" class="input" id="gistToken" v-model="token"
-                    placeholder="Personal Access Tokens" />
-
-            <br>
-            <label for="gistId" class="key">Gist Id:</label>
-
-                <input type="password" class="input" id="gistId" v-model="gist_id" placeholder="Gist Id" />
-
-
+                <label for="gistToken" class="key">Access Token:</label>
+                <input type="password" class="input" id="gistToken" v-model="token" placeholder="access tokens" />
+                <br>
+                <label for="gistId" class="key">Gist Id:</label>
+                <input type="password" class="input" id="gistId" v-model="gist_id" placeholder="gist id" />
+                <hr />
+                <button class="gist" v-on:click="rememberMe" :disabled="ButtonDisabled">remember me</button>
+                <button class="gist" v-on:click="clearStorage">clear validation storage</button>
         </div>
 
         <br>
@@ -95,19 +103,26 @@
         <button class="gist" v-on:click="updateData">update</button>
         <button class="gist" v-on:click="getData">get</button>
 
+
+        <!-- <button class="gist" v-on:click="saveDataLocal">save local</button> -->
+
+
         <div class="wrap">
             <p class="todo">= ＭｅＭｏ =</p>
-            <div id="dodo" contenteditable="true">
+            <div v-if="is_loading">
+                <p>Loading...</p>
+            </div>
+            <div v-else id="dodo" contenteditable="true">
                 <div class="miku" contenteditable="true" v-for="(item,index) in list1" v-text="item"
                     @input="handleInput" v-on:keyup.enter.prevent="addNewList">
                 </div>
-                <!-- <div class="miku" contenteditable="true" @input="handleInput" v-on:keyup.enter.prevent="addNewList"> -->
             </div>
-            <textarea name="" id="" cols="30" rows="10" v-model="pulled"
-                v-if="this.pulled != null"> {{pulled}} </textarea>
+            <!-- <textarea name="" id="" cols="30" rows="10" v-model="pulled"
+                v-if="this.pulled != null"> {{pulled}} </textarea> -->
         </div>
     </div>
     </div>
+    <script src="./vue@2.6.11.js"></script>
     <script src="./index.js"></script>
 </body>
 

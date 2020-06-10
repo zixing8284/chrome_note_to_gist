@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "notebook to gist",
+    "version": "1.0",
+    "description": "chrome notebook to gist",
+    "background": {
+        "persistent": false,
+        "scripts": [
+            "eventPage.js"
+        ]
+    },
+    "browser_action": {
+        "default_title": "notebook to gist"
+    },
+    "permissions": [
+        "storage",
+        "https://api.github.com/",
+        "https://unpkg.com/"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
