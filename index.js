@@ -1,30 +1,39 @@
-var unsaved = false;
-window.addEventListener("beforeunload", () =>{
-    if(saved){
+let lalalulu;
 
+window.onload = () => {
+    chrome.storage.local.get("DodoData", (response) => {
+        response.DodoData = document.getElementById("dodo").innerHTML;
+        chrome.storage.local.set(response);
+        lalalulu = response.DodoData;
+        console.log(lalalulu);
+    })
+}
+
+window.addEventListener("beforeunload", (event) => {
+    if (lalalulu != document.getElementById("dodo").innerHTML) {
+        event.returnValue = "not saved";
     }
-    app.blur();
+    // app.rememberDodo();
 });
+// 每10s保存一次
+setInterval(() => {
+    app.rememberDodo();
+}, 10000);
 
 
 class Github {
-    // 整个index.html string
-    // notesource = document.documentElement.outerHTML;
     // #dodo string
     notesource = document.getElementById("dodo").innerHTML;
-
     // access_token
     token = "";
     // gist_id
     gist_id = "";
-
     raw = {};
     requestOptions = {};
     constructor() {
         this.gist_id = app.gist_id;
         this.token = app.token;
     }
-    // pulled = null;
     // 需要发送的gist内容格式
     set_raw(description, content) {
         this.raw = JSON.stringify({
@@ -72,10 +81,7 @@ class Github {
             const response = await fetch(`https://api.github.com/gists/${this.gist_id}`, { method: 'GET' });
             const result = await response.json();
             if (flag == true) {
-                // app.pulled = result.files["index.html"].content;
                 Vue.prototype.$puluing = result.files["index.html"].content;
-                // console.log(Vue.prototype.$puluing);
-                // console.log(app.$puluing);
                 document.getElementById("dodo").innerHTML = app.$puluing;
                 this.notesource = app.$puluing;
             }
@@ -103,10 +109,9 @@ const app = new Vue({
         }
     },
     watch: {
-        blabla:{
-            handler(newName, oldName){
-                console.log(oldName);
-                // this.rememberDodo();
+        blabla: {
+            handler(newName, oldName) {
+                // console.log(oldName);
             }
         }
     },
@@ -160,11 +165,11 @@ const app = new Vue({
             chrome.storage.local.get("validation", (response) => {
                 if (!response.validation) {
                     response.validation = [];
-                    if(this.token || this.gist_id){
+                    if (this.token || this.gist_id) {
                         response.validation.push(this.token, this.gist_id);
                         chrome.storage.local.set(response);
                         this.ButtonDisabled = true;
-                    }else{
+                    } else {
                         console.log("不能为空");
                         // pass
                     };
@@ -179,17 +184,17 @@ const app = new Vue({
             chrome.storage.local.get("DodoData", (response) => {
                 if (response.DodoData) {
                     chrome.storage.local.remove("DodoData", () => {
-                        console.log('removed');
+                        console.log('removed and saved');
                     });
                 };
                 response.DodoData = document.getElementById("dodo").innerHTML;
                 chrome.storage.local.set(response);
-                console.log(response.DodoData);
                 this.blabla = response.DodoData;
+                console.log(lalalulu); //undefined
+                lalalulu = response.DodoData;
             })
         },
         blur() {
-            // console.log("blur");
             this.rememberDodo();
         },
         clearValidation() {

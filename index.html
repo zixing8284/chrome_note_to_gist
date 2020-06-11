@@ -86,16 +86,16 @@
 
 <body>
     <div id="app">
-        <p># `get` button only works for gist already updated. work only once when you start.</p>
+        <p># `get` button only works for gist already updated. works only once when you start.</p>
         <div class="row">
-                <label for="gistToken" class="key">Access Token:</label>
-                <input type="password" class="input" id="gistToken" v-model="token" placeholder="access tokens" />
-                <br>
-                <label for="gistId" class="key">Gist Id:</label>
-                <input type="password" class="input" id="gistId" v-model="gist_id" placeholder="gist id" />
-                <hr />
-                <button class="gist" v-on:click="rememberMe" :disabled="ButtonDisabled">remember me</button>
-                <button class="gist" v-on:click="clearValidation">clear validation storage</button>
+            <label for="gistToken" class="key">Access Token:</label>
+            <input type="password" class="input" id="gistToken" v-model="token" placeholder="access tokens" />
+            <br>
+            <label for="gistId" class="key">Gist Id:</label>
+            <input type="password" class="input" id="gistId" v-model="gist_id" placeholder="gist id" />
+            <hr />
+            <button class="gist" v-on:click="rememberMe" :disabled="ButtonDisabled">remember me</button>
+            <button class="gist" v-on:click="clearValidation">clear validation storage</button>
         </div>
 
         <br>
